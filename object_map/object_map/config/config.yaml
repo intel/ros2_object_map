@@ -1,0 +1,27 @@
+object_map:
+    min_diameter: 0.2
+    max_diameter: 0.4
+    max_distance: 3.0
+    ref_camera_id: "rgbd_cam"
+    ref_map_id: "map"
+    object_map_file: "/tmp/object_map.yaml"
+
+    default_probability_tolerance: 0.5
+    default_distance_tolerance: 1.0
+
+    objects:
+        chair:
+            probability: 0.6
+            distance_tolerance: 0.8
+
+        charger_pile:
+            probability: 0.4
+            distance_tolerance: 0.6
+
+        car:
+            probability: 0.8
+            distance_tolerance: 0.4
+
+        toy:
+            probability: 0.7
+            distance_tolerance: 0.4
