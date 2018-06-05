@@ -3,7 +3,7 @@
 ## 1 Introduction
 ros2_object_map is ROS2 package which designes to mark tag of objects on map when SLAM. It uses [ros2_object_analytics](https://github.com/intel/ros2_object_analytics) for object detection.
 
-![Architecture of Object Map](https://github.intel.com/otc-rse/ros2_object_map/blob/dev/object_map/object_map/ObjectMap.PNG "architecture of object map")
+![Architecture of Object Map](https://github.com/intel/ros2_object_map/blob/master/object_map/object_map/ObjectMap.PNG "architecture of object map")
 
 ## 2 Prerequisite
   * [ros2_object_analytics](https://github.com/intel/ros2_object_analytics) installed
