@@ -49,29 +49,45 @@ class ObjectFilter(object):
         """
         when received msg from topic, execute callback
         """
+        def overlap_ratio(obj_a, obj_b):
+            x1 = obj_a.roi.x_offset
+            y1 = obj_b.roi.y_offset
+            width1 = obj_a.roi.width
+            height1 = obj_a.roi.height
+            x2 = obj_b.roi.x_offset
+            y2 = obj_b.roi.y_offset
+            width2 = obj_b.roi.width
+            height2 = obj_b.roi.height
+            endx = max(x1+width1,x2+width2)
+            startx = min(x1,x2)
+            width = width1+width2-(endx-startx)
+            endy = max(y1+height1,y2+height2)
+            starty = min(y1,y2)
+            height = height1+height2-(endy-starty)
+            if (width<=0 and height<=0):
+                return 0
+            else:
+                Area = width*height
+                Area1 = width1*height1
+                Area2 = width2*height2
+                ratio = Area /(Area1+Area2-Area)
+            return ratio
+
         self._logger.info("Receiving Message Filter Message...")
         pub_objects = Objects()
         pub_objects.header.stamp = tracked_objects.header.stamp
         for tracked_object in tracked_objects.tracked_objects:
             filter_object = TrackObject()
-            # print "id:%d" % (tracked_object.id)
 
             filter_object._track_id = tracked_object.id
             for object_inboxes_3d in objects_in_boxes_3d.objects_in_boxes:
-                if tracked_object.roi.x_offset == object_inboxes_3d.roi.x_offset and \
-                   tracked_object.roi.y_offset == object_inboxes_3d.roi.y_offset and \
-                   tracked_object.roi.height == object_inboxes_3d.roi.height and \
-                   tracked_object.roi.width == object_inboxes_3d.roi.width:
 
-                    filter_object._min_point = object_inboxes_3d.min
-                    filter_object._max_point = object_inboxes_3d.max
+                if overlap_ratio(tracked_object, object_inboxes_3d) > 0.6:
+                    filter_object._min_point= object_inboxes_3d.min
+                    filter_object._max_point= object_inboxes_3d.max
 
             for object_in_box in objects_in_boxes.objects_vector:
-                if tracked_object.roi.x_offset == object_in_box.roi.x_offset and \
-                   tracked_object.roi.y_offset == object_in_box.roi.y_offset and \
-                   tracked_object.roi.height == object_in_box.roi.height and \
-                   tracked_object.roi.width == object_in_box.roi.width:
-
+                if overlap_ratio(tracked_object, object_in_box) > 0.6:
                     filter_object._text = object_in_box.object.object_name
                     filter_object._probability = object_in_box.object.probability
 
